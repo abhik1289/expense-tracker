@@ -14,21 +14,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 model User {
-  id                      String             @id @default(auto()) @map("_id") @db.ObjectId
-  email                   String             @unique
-  emailVerified           DateTime? // This field must exist
-  name                    String?
-  image                   String?
-  createdAt               DateTime           @default(now())
-  updatedAt               DateTime           @updatedAt
-  accounts                Account[]
-  sessions                Session[]
+  id               String             @id @default(auto()) @map("_id") @db.ObjectId
+  email            String             @unique
+  emailVerified    DateTime? // This field must exist
+  name             String?
+  image            String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  accounts         Account[]
+  sessions         Session[]
+  Category         Category[]
+  Budget           Budget[]
+  BedgetExpense    BedgetExpense[]
+  RecurringExpense RecurringExpense[]
 }
 
-
+model UserMeta {
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId           String  @db.ObjectId
+  emailNofications Boolean @default(false)
+  nickname         String? @db.String
+  customEmail      String? @db.String
+  mobileNumber     String? @db.String
+}
 
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
@@ -64,4 +73,67 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Category {
+  id               String             @id @default(auto()) @map("_id") @db.ObjectId
+  name             String             @unique
+  type             ExpenseType
+  icon             String
+  color            String?
+  userId           String             @db.ObjectId
+  User             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  BedgetExpense    BedgetExpense[]
+  RecurringExpense RecurringExpense[]
+}
+
+model Budget {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  amount        Float
+  startDate     DateTime
+  endDate       DateTime
+  isActive      Boolean         @default(false)
+  userId        String          @db.ObjectId
+  User          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  BedgetExpense BedgetExpense[]
+}
+
+model BedgetExpense {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  budgetId   String   @db.ObjectId
+  categoryId String   @db.ObjectId
+  amount     Float
+  date       DateTime
+  note       String?
+  userId     String   @db.ObjectId
+  User       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Budget     Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  Category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model RecurringExpense {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String      @db.ObjectId
+  categoryId String      @db.ObjectId
+  amount     Float
+  frequency  ExpenseType // e.g., "daily", "weekly", "monthly"
+  startDate  DateTime
+  endDate    DateTime?
+  note       String?
+  User       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Category   Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+enum ExpenseType {
+  INCOME
+  EXPENSE
 }
