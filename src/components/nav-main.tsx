@@ -1,8 +1,5 @@
 "use client";
 
-import { IconCirclePlusFilled, IconMail, type Icon } from "@tabler/icons-react";
-
-import { Button } from "@/components/ui/button";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -12,41 +9,37 @@ import {
 } from "@/components/ui/sidebar";
 import { menusType } from "./app-sidebar";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function NavMain({ items }: { items: menusType[] }) {
+  const pathname = usePathname();
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
-          <SidebarMenuItem className="flex items-center gap-2">
-            {/* <SidebarMenuButton
-              tooltip="Quick Create"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
-            >
-              <IconCirclePlusFilled />
-              <span>Quick Create</span>
-            </SidebarMenuButton> */}
-            {/* <Button
-              size="icon"
-              className="size-8 group-data-[collapsible=icon]:opacity-0"
-              variant="outline"
-            >
-              <IconMail />
-              <span className="sr-only">Inbox</span>
-            </Button> */}
-          </SidebarMenuItem>
-        </SidebarMenu>
-        <SidebarMenu>
-          {items.map((item) => (
-            <Link href={item.path} key={item.id} className="w-full">
-              <SidebarMenuItem className="cursor-pointer" key={item.title}>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon}
-                  <span>{item.title}</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </Link>
-          ))}
+          {items.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.path;
+            return (
+              <Link href={item.path} key={item.id} className="w-full">
+                <SidebarMenuItem
+                  className={`cursor-pointer ${
+                    pathname === item.path && "bg-[#d5d4d1] rounded-md"
+                  }`}
+                  key={item.title}
+                >
+                  <SidebarMenuButton tooltip={item.title}>
+                    <Icon
+                      className="size-5"
+                      strokeWidth={isActive ? 2.5 : 1.5}
+                      // fill={isActive ? "currentColor" : "none"}
+                    />
+                    <span>{item.title}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </Link>
+            );
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

@@ -40,12 +40,13 @@ import {
   User,
   Folder,
   Settings,
+  LucideIcon,
 } from "lucide-react";
 
 export type menusType = {
   id: number;
   title: string;
-  icon: React.ReactNode;
+  icon: LucideIcon;
   path: string;
 };
 
@@ -53,38 +54,37 @@ const menus: menusType[] = [
   {
     id: 1,
     title: "Dashboard",
-    icon: <LayoutDashboard className="size-5" />,
+    icon: LayoutDashboard,
     path: "/",
   },
   {
     id: 2,
     title: "Expense",
-    icon: <Wallet className="size-5" />,
+    icon: Wallet,
     path: "/expense",
   },
   {
     id: 3,
     title: "Budget",
-    icon: <PiggyBank className="size-5" />,
+    icon: PiggyBank,
     path: "/budget",
-  },
-  {
-    id: 5,
-    title: "Category",
-    icon: <Folder className="size-5" />,
-    path: "/category",
   },
   {
     id: 4,
     title: "Profile",
-    icon: <User className="size-5" />,
+    icon: User,
     path: "/profile",
   },
-
+  {
+    id: 5,
+    title: "Category",
+    icon: Folder,
+    path: "/category",
+  },
   {
     id: 6,
     title: "Settings",
-    icon: <Settings className="size-5" />,
+    icon: Settings,
     path: "/settings",
   },
 ];
