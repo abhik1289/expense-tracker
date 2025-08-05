@@ -40,7 +40,9 @@ export function InputFiled({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} />
+            <Input
+            className="w-full py-3 px-2 focus:border-blue-40 "
+            placeholder={placeholder} {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>
